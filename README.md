@@ -1,0 +1,2 @@
+# MediumAutoGenerateEntity
+自动生成数据库表对应的entity类升级版
