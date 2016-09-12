@@ -16,8 +16,11 @@ import javax.persistence.*;
 #end
 public class ${entity.entityName} implements Serializable {
 #foreach($fieldMeta in $entity.fieldMetaList)
-#if(${fieldMeta.fieldComment})//${fieldMeta.fieldComment}#end
+    #if(${fieldMeta.fieldComment})
+private ${fieldMeta.fieldType} ${fieldMeta.fieldName};//${fieldMeta.fieldComment}
+    #else
 private ${fieldMeta.fieldType} ${fieldMeta.fieldName};
+    #end
 #end
 
 // Constructors

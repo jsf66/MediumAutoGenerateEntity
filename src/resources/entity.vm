@@ -16,8 +16,7 @@ import javax.persistence.*;
 #end
 public class ${entity.entityName} implements Serializable {
 #foreach($fieldMeta in $entity.fieldMetaList)
-#if(${fieldMeta.fieldComment})//${fieldMeta.fieldComment}#end
-private ${fieldMeta.fieldType} ${fieldMeta.fieldName};
+private ${fieldMeta.fieldType} ${fieldMeta.fieldName};#if(${fieldMeta.fieldComment})//${fieldMeta.fieldComment}#end
 #end
 
 // Constructors
@@ -42,7 +41,7 @@ this.${fieldMeta.fieldName} = ${fieldMeta.fieldName};
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 #end
 #end
-#if(${fieldMeta.fieldDateTimePrecision})
+#if(${fieldMeta.fieldType}=="Timestamp")
 @Temporal(TemporalType.TIMESTAMP)
 #end
 ##@Column(name="${fieldMeta.columnInfo.columnName}"#if(!${fieldMeta.whetherNULL}),nullable=false #else,nullable=true#end#if(${fieldMeta.fieldLength}),length=${fieldMeta.fieldLength}#elseif(${fieldMeta.fieldScale} && ${fieldMeta.fieldPrecision}),precision=${fieldMeta.fieldPrecision},scale=${fieldMeta.fieldScale}#end)
