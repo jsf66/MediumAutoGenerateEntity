@@ -15,6 +15,8 @@ import java.sql.SQLException;
  * Created by jsf on 16/8/18..
  */
 public class DataBaseCommonAssist {
+
+    public static String[] wholeNumberArray={"INTEGER", "BIGINT", "SMALLINT", "TINYINT", "MEDIUMINT","INT"};
     /**
      * 数据库中获取每个数据表中主键的个数
      *

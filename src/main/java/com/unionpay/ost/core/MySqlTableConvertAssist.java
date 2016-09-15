@@ -135,9 +135,8 @@ public class MySqlTableConvertAssist {
                                 fieldMeta.setFieldPrecision(Long.parseLong(columnPrecision));
                                 fieldMeta.setFieldScale(Long.parseLong(columnScale));
                                 //对于这四种整数数据类型,将它们的Precision设置为空
-                                String[] wholeNumberType={"TINYINT","SMALLINT","MEDIUMINT","INT"};
-                                for(int i=0;i<wholeNumberType.length;i++){
-                                    if(wholeNumberType[i].equalsIgnoreCase(columnDateType)){
+                                for (String strType : DataBaseCommonAssist.wholeNumberArray) {
+                                    if(strType.equalsIgnoreCase(columnDateType)){
                                         long columnLength = Long.parseLong(columnType.replace("(", "").replace(")", "").replace(columnDateType, ""));
                                         fieldMeta.setFieldLength(columnLength);
                                         fieldMeta.setFieldPrecision(null);

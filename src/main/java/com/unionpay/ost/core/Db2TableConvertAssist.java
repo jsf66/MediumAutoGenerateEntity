@@ -155,8 +155,7 @@ public class Db2TableConvertAssist {
                             fieldMeta.setFieldScale(Long.parseLong(columnScale));
                         }
                         //如果是这五种数据类型,则将Precision置为null
-                        String[] wholeNumberType = {"INTEGER", "BIGINT", "SMALLINT", "TINYINT", "MEDIUMINT"};
-                        for (String strType : wholeNumberType) {
+                        for (String strType : DataBaseCommonAssist.wholeNumberArray) {
                             if (strType.equalsIgnoreCase(columnDateType)) {
                                 fieldMeta.setFieldLength(Long.parseLong(columnLength));
                                 fieldMeta.setFieldPrecision(null);
