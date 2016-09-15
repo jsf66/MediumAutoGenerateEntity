@@ -129,18 +129,48 @@ public class MySqlTableConvertAssist {
                     fieldMeta.setFieldName(StringUtils.capInMark(columnName, DataBaseRelateConstant.TABLESPILTMARK, false));
                     fieldMeta.setFieldType(DatabaseTypeConvertUtil.dataBaseTypeToJavaTypeForMYSQL(columnDateType.toUpperCase()));
                     if (!columnDateType.equals(columnType)) {
-                        //对整数或带有精度的时间类型进行处理
-                        if (StringUtils.isEmpty(columnScale) || (0 == Long.parseLong(columnScale))) {
+                        //对于这种情况,如果小数精度类型为0,那么和整数无法在字段上区别,同时在entity类上显示注解有区别,只有通过类型来判断是整数还是带有精度数
+                        if(!StringUtils.isEmpty(columnScale)){
+                            if(Integer.parseInt(columnScale)==0){
+                                fieldMeta.setFieldPrecision(Long.parseLong(columnPrecision));
+                                fieldMeta.setFieldScale(Long.parseLong(columnScale));
+                                //对于这四种整数数据类型,将它们的Precision设置为空
+                                String[] wholeNumberType={"TINYINT","SMALLINT","MEDIUMINT","INT"};
+                                for(int i=0;i<wholeNumberType.length;i++){
+                                    if(wholeNumberType[i].equalsIgnoreCase(columnDateType)){
+                                        long columnLength = Long.parseLong(columnType.replace("(", "").replace(")", "").replace(columnDateType, ""));
+                                        fieldMeta.setFieldLength(columnLength);
+                                        fieldMeta.setFieldPrecision(null);
+                                        break;
+                                    }
+                                }
+                            }else{
+                                //对于精度不是0的,那么它就是小数,直接进行设置
+                                fieldMeta.setFieldPrecision(Long.parseLong(columnPrecision));
+                                fieldMeta.setFieldScale(Long.parseLong(columnScale));
+                            }
+                        }else{
+                            //可能是字符型也可能是日期类型
                             long columnLength = Long.parseLong(columnType.replace("(", "").replace(")", "").replace(columnDateType, ""));
                             fieldMeta.setFieldLength(columnLength);
                             if (!StringUtils.isEmpty(columnDateTimePrecision)) {
                                 fieldMeta.setFieldDateTimePrecision(Long.parseLong(columnDateTimePrecision));
                             }
-                        } else {
-                            //对带有小数精度要求的数进行处理
-                            fieldMeta.setFieldPrecision(Long.parseLong(columnPrecision));
-                            fieldMeta.setFieldScale(Long.parseLong(columnScale));
+
                         }
+
+//                        //对整数或带有精度的时间类型进行处理
+//                        if (StringUtils.isEmpty(columnScale) || (0 == Long.parseLong(columnScale))) {
+//                            long columnLength = Long.parseLong(columnType.replace("(", "").replace(")", "").replace(columnDateType, ""));
+//                            fieldMeta.setFieldLength(columnLength);
+//                            if (!StringUtils.isEmpty(columnDateTimePrecision)) {
+//                                fieldMeta.setFieldDateTimePrecision(Long.parseLong(columnDateTimePrecision));
+//                            }
+//                        } else {
+//                            //对带有小数精度要求的数进行处理
+//                            fieldMeta.setFieldPrecision(Long.parseLong(columnPrecision));
+//                            fieldMeta.setFieldScale(Long.parseLong(columnScale));
+//                        }
                     }
                     //该列是否为空,存放的是YES或NO
                     if ("YES".equalsIgnoreCase(columnIsNull)) {

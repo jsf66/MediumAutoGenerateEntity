@@ -64,7 +64,7 @@ this.${fieldMeta.fieldName} = ${fieldMeta.fieldName};
 #end
 ##说明是符合主键
 #if(!${entity.tableInfo.tableName})
-public boolean equal(Object other){
+public boolean equals(Object other){
     if(this==other){
     return true;
     }
@@ -79,7 +79,11 @@ public int hashCode(){
     final int prime=31;
     int hash=17;
     #foreach($fieldMeta in $entity.fieldMetaList)
+    #if(${fieldMeta.fieldType}=="String")
+    hash=hash*prime+this.${fieldMeta.fieldName}.hashCode();
+    #else
     hash=hash*prime+this.${fieldMeta.fieldName};
+    #end
     #end
     return hash;
 }

@@ -4,6 +4,7 @@ import com.unionpay.ost.exception.MyException;
 import com.unionpay.ost.utils.StringUtils;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 /**
@@ -64,7 +65,13 @@ public class Configuration {
         File file=new File(Configuration.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         InputStream in = null;
         try {
-            in = new FileInputStream(file.getParent()+"/db.properties");
+            try {
+                //解决配置文件路径中存在中文字符的问题
+                String path=URLDecoder.decode(file.getParent(),"UTF-8");
+                in = new FileInputStream(URLDecoder.decode(file.getParent(),"UTF-8")+"/db.properties");
+            } catch (UnsupportedEncodingException e) {
+                throw new MyException(e,"无法获取配置文件所在路径");
+            }
         } catch (FileNotFoundException e) {
             throw new MyException(e,"无法读取数据库配置文件");
         }
